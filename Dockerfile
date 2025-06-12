@@ -19,22 +19,23 @@ ENV TITLE="Android Studio"
 ENV HOME=/config
 
 # Configure Openbox to remove window decorations for Android Studio
-RUN mkdir -p /config/.config/openbox \
-    && echo '<?xml version="1.0" encoding="UTF-8"?> \
-<openbox_config> \
-  <applications> \
-    <application type="normal" class="jetbrains-studio"> \
-      <decor>no</decor> \
-      <fullscreen>yes</fullscreen> \
-    </application> \
-  </applications> \
-</openbox_config>' > /config/.config/openbox/rc.xml
+RUN mkdir -p /config/.config/openbox
+COPY <<EOF /config/.config/openbox/rc.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_config>
+  <applications>
+    <application type="normal" class="jetbrains-studio">
+      <decor>no</decor>
+      <fullscreen>yes</fullscreen>
+    </application>
+  </applications>
+</openbox_config>
+EOF
 
 
 # Add security settings for opening links
 RUN apk add --no-cache chromium \
-    && mkdir -p /config/.config/chromium \
-    && echo "user_pref('network.protocol-handler.warn-external-default', true);" > /config/.config/chromium/prefs.js
+    && mkdir -p /config/.config/chromium
 
 # Enable nested virtualization
 RUN apk add --no-cache qemu qemu-system-x86_64 \
